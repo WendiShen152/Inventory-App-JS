@@ -43,27 +43,28 @@ var CategoryView = exports["default"] = /*#__PURE__*/function () {
         // create new object for each category
         var newCategroy = {
           id: new Date().getTime(),
-          title: this.ctgTitleInput.value,
-          description: this.ctgDescInput.value
+          title: this.ctgTitleInput.value.trim(),
+          description: this.ctgDescInput.value.trim()
         };
         // reset inputs value
         this.ctgTitleInput.value = ' ';
         this.ctgDescInput.value = ' ';
         // save category to local storage
         var savedCategories = _storage["default"].getCategories();
-        // edit => ... save
-        // new => ... save
+        var norm = function norm(t) {
+          return String(t).trim().toLowerCase();
+        };
         var existedItem = savedCategories.find(function (c) {
-          return c.title === newCategroy.title;
+          return norm(c.title) === norm(newCategroy.title);
         });
         if (existedItem) {
-          // edit
           existedItem.title = newCategroy.title;
           existedItem.description = newCategroy.description;
           alert("this category name has been added before so we will update the category description!");
+          _storage["default"].saveCategories(savedCategories);
+          this.instantCtgUpdate(savedCategories);
           return;
         } else {
-          // new
           newCategroy.id = new Date().getTime();
           newCategroy.createdAt = new Date().toISOString();
           savedCategories.push(newCategroy);

@@ -1,4 +1,9 @@
 import Storage from "./storage.js";
+import {
+    parseQuantityDisplay,
+    nextQuantityAfterToggle,
+    validateNewProductDraft,
+} from "./productValidation.js";
 
 export default class ProductView {
     constructor() {
@@ -37,34 +42,51 @@ export default class ProductView {
     }
 
     addNewProduct() {
-        if (this.pdtTitle.value.trim().length >= 2) {
-            // create new object for each category
-            const newProduct = {
-                id: new Date().getTime(),
-                title: this.pdtTitle.value.trim(),
-                quantity: this.pdtQty.innerText,
-                location: this.pdtLocation.value,
-                category: this.ctgSelect.value,
-                persianDate: new Date().toLocaleDateString("fa-IR")
+        const qty = parseQuantityDisplay(this.pdtQty.innerText);
+        const check = validateNewProductDraft({
+            title: this.pdtTitle.value,
+            location: this.pdtLocation.value,
+            category: this.ctgSelect.value,
+            quantity: qty,
+        });
+        if (!check.ok) {
+            if (check.errors.includes("title")) {
+                alert(
+                    "Your product title must be at least 2 non-space characters."
+                );
+                return;
             }
-            // reset inputs value
-            this.pdtTitle.value = ' '
-            this.pdtQty.innerText = 0,
-            this.pdtLocation.value = "none"
-            this.ctgSelect.value = "none"
-            // save product to local storage
-            const pdtList = Storage.getProducts
-            // console.log(pdtList);
-            pdtList.push(newProduct)
-            Storage.saveProducts(pdtList)
-            // instant update html product list from storage
-            this.sortBySelect(this.sortSelect.value)
-            this.showListedProducts(pdtList)
-
-        } else {
-            alert("your entered title for category must be at least 2 characters!!!")
+            if (check.errors.includes("location")) {
+                alert("Please select a valid storage location.");
+                return;
+            }
+            if (check.errors.includes("category")) {
+                alert("Please select a category.");
+                return;
+            }
+            if (check.errors.includes("quantity")) {
+                alert("Quantity must be zero or a positive whole number.");
+                return;
+            }
         }
 
+        const newProduct = {
+            id: new Date().getTime(),
+            title: this.pdtTitle.value.trim(),
+            quantity: String(qty),
+            location: this.pdtLocation.value,
+            category: this.ctgSelect.value,
+            persianDate: new Date().toLocaleDateString("fa-IR"),
+        };
+        this.pdtTitle.value = "";
+        this.pdtQty.innerText = "0";
+        this.pdtLocation.value = "none";
+        this.ctgSelect.value = "none";
+        const pdtList = Storage.getProducts;
+        pdtList.push(newProduct);
+        Storage.saveProducts(pdtList);
+        this.sortBySelect(this.sortSelect.value);
+        this.showListedProducts(pdtList);
     }
 
     showListedProducts(productList) {
@@ -149,14 +171,16 @@ export default class ProductView {
     }
 
     toggleProductQty(e) {
-        // console.log(e.currentTarget.id);
-        switch (e.currentTarget.id) {
-            case "incQty":
-                this.pdtQty.innerText++;
-                break;
-            case "decQty":
-                this.pdtQty.innerText--;
-                break;
+        const id = e.currentTarget.id;
+        const current = parseQuantityDisplay(this.pdtQty.innerText);
+        if (id === "incQty") {
+            this.pdtQty.innerText = String(
+                nextQuantityAfterToggle(current, true)
+            );
+        } else if (id === "decQty") {
+            this.pdtQty.innerText = String(
+                nextQuantityAfterToggle(current, false)
+            );
         }
     }
 

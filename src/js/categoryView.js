@@ -27,25 +27,28 @@ export default class CategoryView {
             // create new object for each category
             const newCategroy = {
                 id: new Date().getTime(),
-                title: this.ctgTitleInput.value,
-                description: this.ctgDescInput.value,
+                title: this.ctgTitleInput.value.trim(),
+                description: this.ctgDescInput.value.trim(),
             }
             // reset inputs value
             this.ctgTitleInput.value = ' '
             this.ctgDescInput.value = ' '
             // save category to local storage
             const savedCategories = Storage.getCategories();
-            // edit => ... save
-            // new => ... save
-            const existedItem = savedCategories.find((c) => c.title === newCategroy.title);
+            const norm = (t) => String(t).trim().toLowerCase();
+            const existedItem = savedCategories.find(
+                (c) => norm(c.title) === norm(newCategroy.title)
+            );
             if (existedItem) {
-                // edit
                 existedItem.title = newCategroy.title;
                 existedItem.description = newCategroy.description;
-                alert("this category name has been added before so we will update the category description!")
-                return
+                alert(
+                    "this category name has been added before so we will update the category description!"
+                );
+                Storage.saveCategories(savedCategories);
+                this.instantCtgUpdate(savedCategories);
+                return;
             } else {
-                // new
                 newCategroy.id = new Date().getTime();
                 newCategroy.createdAt = new Date().toISOString();
                 savedCategories.push(newCategroy);
