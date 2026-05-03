@@ -6,4 +6,18 @@ module.exports = {
     transform: {
         "^.+\\.js$": "babel-jest",
     },
+    collectCoverage: true,
+    collectCoverageFrom: [
+        "src/js/productValidation.js",
+    ],
+    coverageDirectory: "coverage",
+    coverageReporters: ["text", "lcov"],
+    coverageThreshold: {
+        global: {
+            statements: 80,
+            branches: 80,
+            functions: 80,
+            lines: 80,
+        },
+    },
 };

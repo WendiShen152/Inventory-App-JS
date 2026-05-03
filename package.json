@@ -119,7 +119,8 @@
     "i18n-babel": "babel src/js/i18n.js -o public/build/babel/i18n.js --presets @babel/preset-env ",
     "babel-all": "npm run storage-babel && npm run i18n-babel && npm run productValidation-babel && npm run categoryView-babel && npm run productView-babel && npm run app-babel",
     "build": "npm run babel-all && webpack",
-    "test": "jest --config jest.config.cjs"
+    "test": "jest --config jest.config.cjs",
+    "test:coverage": "jest --config jest.config.cjs --coverage --runInBand"
   },
   "author": "Abolfazl Rahmati",
   "license": "MIT"
