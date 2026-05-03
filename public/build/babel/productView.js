@@ -20,6 +20,19 @@ function _defineProperties(e, r) { for (var t = 0; t < r.length; t++) { var o = 
 function _createClass(e, r, t) { return r && _defineProperties(e.prototype, r), t && _defineProperties(e, t), Object.defineProperty(e, "prototype", { writable: !1 }), e; }
 function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
 function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
+function formatLocalDateFromUtc(utcDateText) {
+  var date = new Date(utcDateText);
+  if (Number.isNaN(date.getTime())) {
+    return "";
+  }
+  return [date.getFullYear(), String(date.getMonth() + 1).padStart(2, "0"), String(date.getDate()).padStart(2, "0")].join("-");
+}
+function getProductDisplayDate(product) {
+  if (product.createdAt) {
+    return formatLocalDateFromUtc(product.createdAt);
+  }
+  return product.persianDate || "";
+}
 var ProductView = exports["default"] = /*#__PURE__*/function () {
   function ProductView() {
     var _this = this;
@@ -90,7 +103,7 @@ var ProductView = exports["default"] = /*#__PURE__*/function () {
         quantity: String(qty),
         location: this.pdtLocation.value,
         category: this.ctgSelect.value,
-        persianDate: new Date().toLocaleDateString("fa-IR")
+        createdAt: new Date().toISOString()
       };
       this.pdtTitle.value = "";
       this.pdtQty.innerText = "0";
@@ -121,7 +134,7 @@ var ProductView = exports["default"] = /*#__PURE__*/function () {
         category.textContent = product.category;
         var date = document.createElement("p");
         date.className = "basis-[16%] font-vazir ww:text-base xx:text-[15px] dd:text-[14px] ss:text-[13px]";
-        date.textContent = product.persianDate;
+        date.textContent = getProductDisplayDate(product);
         var quantity = document.createElement("p");
         quantity.className = "border-2 border-slate-400 p-1 rounded-2xl ww:text-base xx:text-[15px] dd:text-[14px] ss:text-[13px]";
         quantity.textContent = product.quantity;

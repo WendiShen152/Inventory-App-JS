@@ -6,6 +6,28 @@ import {
 } from "./productValidation.js";
 import { t } from "./i18n.js";
 
+function formatLocalDateFromUtc(utcDateText) {
+    const date = new Date(utcDateText);
+
+    if (Number.isNaN(date.getTime())) {
+        return "";
+    }
+
+    return [
+        date.getFullYear(),
+        String(date.getMonth() + 1).padStart(2, "0"),
+        String(date.getDate()).padStart(2, "0"),
+    ].join("-");
+}
+
+function getProductDisplayDate(product) {
+    if (product.createdAt) {
+        return formatLocalDateFromUtc(product.createdAt);
+    }
+
+    return product.persianDate || "";
+}
+
 export default class ProductView {
     constructor() {
         this.pdtTitle = document.querySelector("#productTitle");
@@ -78,7 +100,7 @@ export default class ProductView {
             quantity: String(qty),
             location: this.pdtLocation.value,
             category: this.ctgSelect.value,
-            persianDate: new Date().toLocaleDateString("fa-IR"),
+            createdAt: new Date().toISOString(),
         };
 
         this.pdtTitle.value = "";
@@ -120,7 +142,7 @@ export default class ProductView {
             const date = document.createElement("p");
             date.className =
                 "basis-[16%] font-vazir ww:text-base xx:text-[15px] dd:text-[14px] ss:text-[13px]";
-            date.textContent = product.persianDate;
+            date.textContent = getProductDisplayDate(product);
 
             const quantity = document.createElement("p");
             quantity.className =
