@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", {
 exports["default"] = void 0;
 var _storage = _interopRequireDefault(require("./storage.js"));
 var _productValidation = require("./productValidation.js");
+var _i18n = require("./i18n.js");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { "default": e }; }
 function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
 function _toConsumableArray(r) { return _arrayWithoutHoles(r) || _iterableToArray(r) || _unsupportedIterableToArray(r) || _nonIterableSpread(); }
@@ -23,7 +24,6 @@ var ProductView = exports["default"] = /*#__PURE__*/function () {
   function ProductView() {
     var _this = this;
     _classCallCheck(this, ProductView);
-    // variables
     this.pdtTitle = document.querySelector("#productTitle");
     this.pdtIncQty = document.querySelector("#incQty");
     this.pdtDecQty = document.querySelector("#decQty");
@@ -35,7 +35,6 @@ var ProductView = exports["default"] = /*#__PURE__*/function () {
     this.toggleBtns = document.querySelectorAll(".toggleBtn");
     this.searchInput = document.querySelector("#searchInput");
     this.sortSelect = document.querySelector("#sort");
-    // event listeners
     this.pdtAddNew.addEventListener("click", function () {
       _this.addNewProduct();
     });
@@ -69,19 +68,19 @@ var ProductView = exports["default"] = /*#__PURE__*/function () {
       });
       if (!check.ok) {
         if (check.errors.includes("title")) {
-          alert("Your product title must be at least 2 non-space characters.");
+          alert((0, _i18n.t)("productTitleError"));
           return;
         }
         if (check.errors.includes("location")) {
-          alert("Please select a valid storage location.");
+          alert((0, _i18n.t)("locationError"));
           return;
         }
         if (check.errors.includes("category")) {
-          alert("Please select a category.");
+          alert((0, _i18n.t)("categoryError"));
           return;
         }
         if (check.errors.includes("quantity")) {
-          alert("Quantity must be zero or a positive whole number.");
+          alert((0, _i18n.t)("quantityError"));
           return;
         }
       }
@@ -130,7 +129,7 @@ var ProductView = exports["default"] = /*#__PURE__*/function () {
         deleteButton.type = "button";
         deleteButton.dataset.id = product.id;
         deleteButton.className = "pdt-dlt-btn flex items-center justify-center";
-        deleteButton.setAttribute("aria-label", "Delete product");
+        deleteButton.setAttribute("aria-label", (0, _i18n.t)("deleteProduct"));
         var svgNS = "http://www.w3.org/2000/svg";
         var deleteIcon = document.createElementNS(svgNS, "svg");
         deleteIcon.setAttribute("aria-hidden", "true");
@@ -155,7 +154,6 @@ var ProductView = exports["default"] = /*#__PURE__*/function () {
     key: "productsAction",
     value: function productsAction() {
       var _this3 = this;
-      // delete product event listener
       var removeBtns = _toConsumableArray(document.querySelectorAll(".pdt-dlt-btn"));
       removeBtns.forEach(function (btn) {
         btn.addEventListener("click", function (e) {
@@ -190,7 +188,6 @@ var ProductView = exports["default"] = /*#__PURE__*/function () {
       var filteredProducts = addedProducts.filter(function (product) {
         return product.title.toLowerCase().trim().includes(normalizedSearchTerm);
       });
-      this.sortBySelect(this.sortSelect.value);
       this.showListedProducts(filteredProducts);
     }
   }, {

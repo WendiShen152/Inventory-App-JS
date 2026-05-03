@@ -4,41 +4,44 @@ import {
     nextQuantityAfterToggle,
     validateNewProductDraft,
 } from "./productValidation.js";
+import { t } from "./i18n.js";
 
 export default class ProductView {
     constructor() {
-        // variables
-        this.pdtTitle = document.querySelector("#productTitle")
-        this.pdtIncQty = document.querySelector("#incQty")
-        this.pdtDecQty = document.querySelector("#decQty")
-        this.pdtLocation = document.querySelector("#productLocations")
-        this.ctgSelect = document.querySelector("#categoriesSelect")
-        this.pdtAddNew = document.querySelector("#addNewProductBtn")
-        this.pdtQty = document.querySelector("#productQuantity")
-        this.productCenter = document.querySelector("#productsCenter")
-        this.toggleBtns = document.querySelectorAll(".toggleBtn")
-        this.searchInput = document.querySelector("#searchInput")
-        this.sortSelect = document.querySelector("#sort")
-        // event listeners
+        this.pdtTitle = document.querySelector("#productTitle");
+        this.pdtIncQty = document.querySelector("#incQty");
+        this.pdtDecQty = document.querySelector("#decQty");
+        this.pdtLocation = document.querySelector("#productLocations");
+        this.ctgSelect = document.querySelector("#categoriesSelect");
+        this.pdtAddNew = document.querySelector("#addNewProductBtn");
+        this.pdtQty = document.querySelector("#productQuantity");
+        this.productCenter = document.querySelector("#productsCenter");
+        this.toggleBtns = document.querySelectorAll(".toggleBtn");
+        this.searchInput = document.querySelector("#searchInput");
+        this.sortSelect = document.querySelector("#sort");
+
         this.pdtAddNew.addEventListener("click", () => {
-            this.addNewProduct()
-        })
+            this.addNewProduct();
+        });
+
         this.toggleBtns.forEach((btn) => {
             btn.addEventListener("click", (e) => {
-                this.toggleProductQty(e)
-            })
-        })
+                this.toggleProductQty(e);
+            });
+        });
+
         this.searchInput.addEventListener("keyup", (e) => {
-            this.searchProducts(e.target.value)
-        })
+            this.searchProducts(e.target.value);
+        });
+
         this.sortSelect.addEventListener("change", (e) => {
-            this.sortBySelect(e.target.value)
-        })
+            this.sortBySelect(e.target.value);
+        });
     }
 
     setupApp() {
-        this.showListedProducts(Storage.getProducts)
-        this.sortBySelect(this.sortSelect.value)
+        this.showListedProducts(Storage.getProducts);
+        this.sortBySelect(this.sortSelect.value);
     }
 
     addNewProduct() {
@@ -49,23 +52,22 @@ export default class ProductView {
             category: this.ctgSelect.value,
             quantity: qty,
         });
+
         if (!check.ok) {
             if (check.errors.includes("title")) {
-                alert(
-                    "Your product title must be at least 2 non-space characters."
-                );
+                alert(t("productTitleError"));
                 return;
             }
             if (check.errors.includes("location")) {
-                alert("Please select a valid storage location.");
+                alert(t("locationError"));
                 return;
             }
             if (check.errors.includes("category")) {
-                alert("Please select a category.");
+                alert(t("categoryError"));
                 return;
             }
             if (check.errors.includes("quantity")) {
-                alert("Quantity must be zero or a positive whole number.");
+                alert(t("quantityError"));
                 return;
             }
         }
@@ -78,13 +80,16 @@ export default class ProductView {
             category: this.ctgSelect.value,
             persianDate: new Date().toLocaleDateString("fa-IR"),
         };
+
         this.pdtTitle.value = "";
         this.pdtQty.innerText = "0";
         this.pdtLocation.value = "none";
         this.ctgSelect.value = "none";
+
         const pdtList = Storage.getProducts;
         pdtList.push(newProduct);
         Storage.saveProducts(pdtList);
+
         this.sortBySelect(this.sortSelect.value);
         this.showListedProducts(pdtList);
     }
@@ -126,7 +131,7 @@ export default class ProductView {
             deleteButton.type = "button";
             deleteButton.dataset.id = product.id;
             deleteButton.className = "pdt-dlt-btn flex items-center justify-center";
-            deleteButton.setAttribute("aria-label", "Delete product");
+            deleteButton.setAttribute("aria-label", t("deleteProduct"));
 
             const svgNS = "http://www.w3.org/2000/svg";
 
@@ -161,18 +166,19 @@ export default class ProductView {
     }
 
     productsAction() {
-        // delete product event listener
-        const removeBtns = [...document.querySelectorAll(".pdt-dlt-btn")]
+        const removeBtns = [...document.querySelectorAll(".pdt-dlt-btn")];
+
         removeBtns.forEach((btn) => {
             btn.addEventListener("click", (e) => {
-                this.deleteProduct(e)
-            })
-        })
+                this.deleteProduct(e);
+            });
+        });
     }
 
     toggleProductQty(e) {
         const id = e.currentTarget.id;
         const current = parseQuantityDisplay(this.pdtQty.innerText);
+
         if (id === "incQty") {
             this.pdtQty.innerText = String(
                 nextQuantityAfterToggle(current, true)
@@ -192,30 +198,36 @@ export default class ProductView {
     }
 
     searchProducts(searchTerm) {
-        const addedProducts = Storage.getProducts
+        const addedProducts = Storage.getProducts;
         const normalizedSearchTerm = searchTerm.toLowerCase().trim();
         const filteredProducts = addedProducts.filter((product) =>
             product.title.toLowerCase().trim().includes(normalizedSearchTerm)
         );
-        this.sortBySelect(this.sortSelect.value)
+
         this.showListedProducts(filteredProducts);
     }
 
     sortBySelect(sortType) {
-        let saveProducts = Storage.getProducts
+        const saveProducts = Storage.getProducts;
         let sortedProducts = [];
+
         if (sortType === "newest") {
             sortedProducts = saveProducts.slice().sort((a, b) => b.id - a.id);
         } else if (sortType === "oldest") {
             sortedProducts = saveProducts.slice().sort((a, b) => a.id - b.id);
-        } else if (sortType ==="A-Z" ){
-            sortedProducts = saveProducts.slice().sort((a,b)=> a.title.toLowerCase().localeCompare(b.title.toLowerCase()))
-        } else if (sortType ==="Z-A" ){
-            sortedProducts = saveProducts.slice().sort((a,b)=> a.title.toLowerCase().localeCompare(b.title.toLowerCase())).reverse()
+        } else if (sortType === "A-Z") {
+            sortedProducts = saveProducts
+                .slice()
+                .sort((a, b) => a.title.toLowerCase().localeCompare(b.title.toLowerCase()));
+        } else if (sortType === "Z-A") {
+            sortedProducts = saveProducts
+                .slice()
+                .sort((a, b) => a.title.toLowerCase().localeCompare(b.title.toLowerCase()))
+                .reverse();
         } else {
             sortedProducts = saveProducts.slice();
         }
+
         this.showListedProducts(sortedProducts);
     }
-
 }

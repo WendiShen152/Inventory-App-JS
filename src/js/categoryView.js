@@ -1,79 +1,75 @@
 import Storage from "./storage.js";
+import { t } from "./i18n.js";
 
 export default class CategoryView {
     constructor() {
-        // variables
-        this.ctgTitleInput = document.querySelector("#categoryTitle")
-        this.ctgDescInput = document.querySelector("#categoryDescription")
-        this.ctgCacelBtn = document.querySelector("#categoryCanelBtn")
-        this.ctgAddBtn = document.querySelector("#categoryAddNewBtn")
-        this.ctgSelect = document.querySelector("#categoriesSelect")
-        // event listeners
+        this.ctgTitleInput = document.querySelector("#categoryTitle");
+        this.ctgDescInput = document.querySelector("#categoryDescription");
+        this.ctgCacelBtn = document.querySelector("#categoryCanelBtn");
+        this.ctgAddBtn = document.querySelector("#categoryAddNewBtn");
+        this.ctgSelect = document.querySelector("#categoriesSelect");
+
         this.ctgAddBtn.addEventListener("click", () => {
-            this.addNewCategory()
-        })
+            this.addNewCategory();
+        });
+
         this.ctgCacelBtn.addEventListener("click", () => {
-            this.ctgTitleInput.value = ' '
-            this.ctgDescInput.value = ' '
-        })
+            this.ctgTitleInput.value = "";
+            this.ctgDescInput.value = "";
+        });
     }
 
     setupApp() {
-        this.instantCtgUpdate(Storage.getCategories())
+        this.instantCtgUpdate(Storage.getCategories());
     }
 
     addNewCategory() {
         if (this.ctgTitleInput.value.trim().length >= 2) {
-            // create new object for each category
             const newCategroy = {
                 id: new Date().getTime(),
                 title: this.ctgTitleInput.value.trim(),
                 description: this.ctgDescInput.value.trim(),
-            }
-            // reset inputs value
-            this.ctgTitleInput.value = ' '
-            this.ctgDescInput.value = ' '
-            // save category to local storage
+            };
+
+            this.ctgTitleInput.value = "";
+            this.ctgDescInput.value = "";
+
             const savedCategories = Storage.getCategories();
-            const norm = (t) => String(t).trim().toLowerCase();
+            const norm = (text) => String(text).trim().toLowerCase();
             const existedItem = savedCategories.find(
-                (c) => norm(c.title) === norm(newCategroy.title)
+                (category) => norm(category.title) === norm(newCategroy.title)
             );
+
             if (existedItem) {
                 existedItem.title = newCategroy.title;
                 existedItem.description = newCategroy.description;
-                alert(
-                    "this category name has been added before so we will update the category description!"
-                );
+                alert(t("duplicateCategory"));
                 Storage.saveCategories(savedCategories);
                 this.instantCtgUpdate(savedCategories);
                 return;
-            } else {
-                newCategroy.id = new Date().getTime();
-                newCategroy.createdAt = new Date().toISOString();
-                savedCategories.push(newCategroy);
             }
-            console.log(savedCategories);
-            Storage.saveCategories(savedCategories)
-            // instant update html category list from storage
-            this.instantCtgUpdate(savedCategories)
+
+            newCategroy.id = new Date().getTime();
+            newCategroy.createdAt = new Date().toISOString();
+            savedCategories.push(newCategroy);
+
+            Storage.saveCategories(savedCategories);
+            this.instantCtgUpdate(savedCategories);
         } else {
-            alert("your entered title for category must be at least 2 characters!!!")
+            alert(t("categoryTitleError"));
         }
     }
 
     instantCtgUpdate(categories) {
-        const ctgListTitles = categories.map(obj => obj.title.trim())
-        console.log(categories);
-        // create option for each category
-        this.ctgSelect.innerHTML = ` <option selected value="none">- select category -</option>  `
-        ctgListTitles.forEach(option => {
-            const newOption = document.createElement("option")
+        const ctgListTitles = categories.map((obj) => obj.title.trim());
+
+        this.ctgSelect.innerHTML = `<option selected value="none">${t("selectCategory")}</option>`;
+
+        ctgListTitles.forEach((option) => {
+            const newOption = document.createElement("option");
             newOption.value = option;
             newOption.textContent = option;
-            // append new created option to select tg
-            this.ctgSelect.append(newOption)
+            this.ctgSelect.append(newOption);
         });
     }
-
 }

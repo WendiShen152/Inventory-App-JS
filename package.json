@@ -116,7 +116,8 @@
     "categoryView-babel": "babel src/js/categoryView.js -o public/build/babel/categoryView.js --presets @babel/preset-env  ",
     "productView-babel": "babel src/js/productView.js -o public/build/babel/productView.js --presets @babel/preset-env  ",
     "storage-babel": "babel src/js/storage.js -o public/build/babel/storage.js --presets @babel/preset-env  ",
-    "babel-all": "npm run storage-babel && npm run productValidation-babel && npm run categoryView-babel && npm run productView-babel && npm run app-babel",
+    "i18n-babel": "babel src/js/i18n.js -o public/build/babel/i18n.js --presets @babel/preset-env ",
+    "babel-all": "npm run storage-babel && npm run i18n-babel && npm run productValidation-babel && npm run categoryView-babel && npm run productView-babel && npm run app-babel",
     "build": "npm run babel-all && webpack",
     "test": "jest --config jest.config.cjs"
   },
