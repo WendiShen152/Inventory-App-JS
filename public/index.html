@@ -150,6 +150,32 @@
         </div>
     </section>
 
+
+    <footer class="mb-10 text-stone-300 text-sm">
+        <a href="privacy.html" data-i18n="privacyPolicyLink" class="underline hover:text-green-500">
+            Privacy Policy
+        </a>
+    </footer>
+
+    <div id="cookieBanner" style="display: none;"
+        class="fixed bottom-0 left-0 right-0 bg-[#1a262d] border-t border-[#394247] text-white p-4 z-50">
+        <div class="max-w-[900px] mx-auto flex flex-col gap-3 dd:flex-row dd:items-center dd:justify-between">
+            <p data-i18n="cookieBannerText" class="text-sm leading-6">
+                We use local storage to save your inventory data, language preference, and cookie choice.
+            </p>
+            <div class="flex gap-2">
+                <button id="cookieRejectBtn" type="button" data-i18n="cookieReject"
+                    class="px-4 py-2 rounded-lg border-2 border-green-600 text-green-600 font-semibold">
+                    Reject
+                </button>
+                <button id="cookieAcceptBtn" type="button" data-i18n="cookieAccept"
+                    class="px-4 py-2 rounded-lg bg-green-600 text-main font-semibold">
+                    Accept
+                </button>
+            </div>
+        </div>
+    </div>
+
     <script src="build/webpack/bundle.js" type="module"></script>
 </body>
 

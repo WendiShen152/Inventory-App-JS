@@ -12,6 +12,7 @@ document.addEventListener("DOMContentLoaded", function () {
   productView.setupApp();
   (0, _i18n.applyTranslations)();
   updateLanguageButtons();
+  setupCookieBanner();
   document.querySelector("#langEn").addEventListener("click", function () {
     (0, _i18n.setLanguage)("en");
     (0, _i18n.applyTranslations)();
@@ -38,4 +39,22 @@ function updateLanguageButtons() {
     langZh.className = "px-3 py-1 rounded-lg bg-green-600 text-main font-semibold";
     langEn.className = "px-3 py-1 rounded-lg border-2 border-green-600 text-green-600 font-semibold";
   }
+}
+function setupCookieBanner() {
+  var banner = document.querySelector("#cookieBanner");
+  var acceptButton = document.querySelector("#cookieAcceptBtn");
+  var rejectButton = document.querySelector("#cookieRejectBtn");
+  if (!banner || !acceptButton || !rejectButton) return;
+  var savedChoice = localStorage.getItem("cookieConsent");
+  if (!savedChoice) {
+    banner.style.display = "block";
+  }
+  acceptButton.addEventListener("click", function () {
+    localStorage.setItem("cookieConsent", "accepted");
+    banner.style.display = "none";
+  });
+  rejectButton.addEventListener("click", function () {
+    localStorage.setItem("cookieConsent", "rejected");
+    banner.style.display = "none";
+  });
 }

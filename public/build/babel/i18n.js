@@ -38,7 +38,11 @@ var translations = exports.translations = {
     categoryError: "Please select a category.",
     quantityError: "Quantity must be zero or a positive whole number.",
     duplicateCategory: "This category name has been added before, so we will update the category description.",
-    categoryTitleError: "Your entered title for category must be at least 2 characters."
+    categoryTitleError: "Your entered title for category must be at least 2 characters.",
+    privacyPolicyLink: "Privacy Policy",
+    cookieBannerText: "We use local storage to save your inventory data, language preference, and cookie choice.",
+    cookieAccept: "Accept",
+    cookieReject: "Reject"
   },
   zh: {
     appTitle: "库存管理应用 JS 与 TailwindCSS",
@@ -69,7 +73,11 @@ var translations = exports.translations = {
     categoryError: "请选择分类。",
     quantityError: "数量必须是 0 或正整数。",
     duplicateCategory: "该分类名称已经存在，因此将更新分类描述。",
-    categoryTitleError: "分类标题至少需要 2 个字符。"
+    categoryTitleError: "分类标题至少需要 2 个字符。",
+    privacyPolicyLink: "隐私政策",
+    cookieBannerText: "我们使用本地存储来保存你的库存数据、语言偏好和 Cookie 选择。",
+    cookieAccept: "接受",
+    cookieReject: "拒绝"
   }
 };
 function getLanguage() {

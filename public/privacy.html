@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Privacy Policy | Inventory App</title>
+    <link rel="stylesheet" href="build/style.css">
+    <style>
+        body {
+            min-height: 100vh;
+            background: #101820;
+            color: #ffffff;
+            font-family: Outfit, Arial, sans-serif;
+            padding: 40px 24px;
+        }
+
+        main {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        a {
+            color: #16a34a;
+            text-decoration: underline;
+        }
+
+        h1 {
+            color: #16a34a;
+            font-size: 32px;
+            margin: 32px 0 24px;
+        }
+
+        h2 {
+            font-size: 20px;
+            margin: 28px 0 12px;
+        }
+
+        p {
+            color: #d6d3d1;
+            line-height: 1.8;
+            margin-bottom: 16px;
+        }
+
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .language-switcher {
+            display: flex;
+            gap: 8px;
+        }
+
+        .language-button {
+            border: 2px solid #16a34a;
+            background: transparent;
+            color: #16a34a;
+            border-radius: 8px;
+            padding: 6px 12px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .language-button.active {
+            background: #16a34a;
+            color: #101820;
+        }
+    </style>
+</head>
+
+<body>
+    <main>
+        <div class="top-bar">
+            <a href="index.html" data-i18n="backLink">Back to Inventory App</a>
+
+            <div class="language-switcher" aria-label="Language selector">
+                <button id="privacyLangEn" type="button" class="language-button">EN</button>
+                <button id="privacyLangZh" type="button" class="language-button">中文</button>
+            </div>
+        </div>
+
+        <h1 data-i18n="pageTitle">Privacy Policy</h1>
+
+        <section>
+            <h2 data-i18n="sectionDataTitle">Data Stored Locally</h2>
+            <p data-i18n="sectionDataText">
+                This Inventory App stores data locally in your browser using localStorage. The app may save product records, category records, language preference, and cookie consent choice.
+            </p>
+        </section>
+
+        <section>
+            <h2 data-i18n="sectionServerTitle">No External Data Transfer</h2>
+            <p data-i18n="sectionServerText">
+                This app does not send your inventory data to an external server and does not use third-party analytics. Data remains on the browser and device where it was entered.
+            </p>
+        </section>
+
+        <section>
+            <h2 data-i18n="sectionControlTitle">Your Control</h2>
+            <p data-i18n="sectionControlText">
+                You can remove saved data at any time by clearing your browser localStorage for this website.
+            </p>
+        </section>
+    </main>
+
+    <script>
+        const privacyTranslations = {
+            en: {
+                backLink: "Back to Inventory App",
+                pageTitle: "Privacy Policy",
+                sectionDataTitle: "Data Stored Locally",
+                sectionDataText: "This Inventory App stores data locally in your browser using localStorage. The app may save product records, category records, language preference, and cookie consent choice.",
+                sectionServerTitle: "No External Data Transfer",
+                sectionServerText: "This app does not send your inventory data to an external server and does not use third-party analytics. Data remains on the browser and device where it was entered.",
+                sectionControlTitle: "Your Control",
+                sectionControlText: "You can remove saved data at any time by clearing your browser localStorage for this website."
+            },
+            zh: {
+                backLink: "返回库存管理应用",
+                pageTitle: "隐私政策",
+                sectionDataTitle: "本地保存的数据",
+                sectionDataText: "本库存管理应用使用浏览器 localStorage 在本地保存数据。应用可能会保存产品记录、分类记录、语言偏好以及 Cookie 选择。",
+                sectionServerTitle: "不会传输到外部服务器",
+                sectionServerText: "本应用不会把你的库存数据发送到外部服务器，也不会使用第三方分析工具。数据会保留在你输入数据时使用的浏览器和设备中。",
+                sectionControlTitle: "你的控制权",
+                sectionControlText: "你可以随时通过清除该网站的浏览器 localStorage 来删除已保存的数据。"
+            }
+        };
+
+        function getPrivacyLanguage() {
+            return localStorage.getItem("language") || "en";
+        }
+
+        function setPrivacyLanguage(language) {
+            localStorage.setItem("language", language);
+        }
+
+        function applyPrivacyTranslations() {
+            const language = getPrivacyLanguage();
+            document.documentElement.lang = language === "zh" ? "zh-CN" : "en";
+
+            document.querySelectorAll("[data-i18n]").forEach((element) => {
+                const key = element.dataset.i18n;
+                element.textContent = privacyTranslations[language][key] || privacyTranslations.en[key] || key;
+            });
+
+            document.querySelector("#privacyLangEn").classList.toggle("active", language === "en");
+            document.querySelector("#privacyLangZh").classList.toggle("active", language === "zh");
+        }
+
+        document.querySelector("#privacyLangEn").addEventListener("click", () => {
+            setPrivacyLanguage("en");
+            applyPrivacyTranslations();
+        });
+
+        document.querySelector("#privacyLangZh").addEventListener("click", () => {
+            setPrivacyLanguage("zh");
+            applyPrivacyTranslations();
+        });
+
+        applyPrivacyTranslations();
+    </script>
+</body>
+</html>
