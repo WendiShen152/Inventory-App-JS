@@ -1,6 +1,6 @@
 /** @type {import("jest").Config} */
 module.exports = {
-    testEnvironment: "node",
+    testEnvironment: "jsdom",
     roots: ["<rootDir>/src/js"],
     testMatch: ["**/__tests__/**/*.test.js"],
     transform: {
@@ -9,6 +9,8 @@ module.exports = {
     collectCoverage: true,
     collectCoverageFrom: [
         "src/js/productValidation.js",
+        "src/js/storage.js",
+        "src/js/i18n.js",
     ],
     coverageDirectory: "coverage",
     coverageReporters: ["text", "lcov"],
